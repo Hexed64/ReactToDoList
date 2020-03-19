@@ -46,11 +46,21 @@ class ToDoList extends React.Component<IToDoListProps, IToDoListState> {
         this.setState(state);
     };
 
+    done(taskId: number): void {
+        let state: IToDoListState = this.getState();
+        let task: ITask = state.tasks.get(taskId);
+        task.isDone = true;
+        state.tasks.set(task.taskId, task);
+
+        this.setState(state);
+    };
+
     renderToDoItem(item: ITask) {
         return (
             <ToDoItem
                 value={item}
                 onDelete={() => this.delete(item.taskId)}
+                onDone={() => this.done(item.taskId)}
                 key={item.taskId}
             />
         );

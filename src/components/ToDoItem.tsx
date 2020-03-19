@@ -6,10 +6,11 @@ function TodoListItem(props: IToDoItemProps) {
     return (
         <li className="list-group-item">
             <div className="list-item">
-                {props.value.name}
+                {props.value.name} {`done: ${props.value.isDone}`}
                 <div className="group-button">
                     <button type="button" className="edit">Edit</button>
                     <button type="button" className="close" onClick={props.onDelete}>&times;</button>
+                    <button type="button" onClick={props.onDone}>Done</button>
                 </div>
             </div>
         </li>    

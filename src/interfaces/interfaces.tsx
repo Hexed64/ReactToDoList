@@ -5,6 +5,7 @@ export interface IToDoListProps {
 export interface IToDoItemProps {
     value: ITask,
     onDelete: any
+    onDone: any
 }
 
 export interface ITask {
