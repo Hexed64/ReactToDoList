@@ -4,8 +4,9 @@ export interface IToDoListProps {
 
 export interface IToDoItemProps {
     value: ITask,
-    onDelete: any
-    onDone: any
+    onDelete: any,
+    onDone: any,
+    onEdit: any
 }
 
 export interface ITask {

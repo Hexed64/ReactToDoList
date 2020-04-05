@@ -20,9 +20,14 @@ class ToDoList extends React.Component<IToDoListProps, IToDoListState> {
         return Object.assign(this.state, {});
     }
 
-    edit() {
-        
-    }
+    edit = (taskId: number, name: string) => (newValue: string) => {
+        let state: IToDoListState = this.getState();
+        let task: ITask = state.tasks.get(taskId);
+        task.name = newValue;
+        state.tasks.set(task.taskId, task);
+
+        this.setState(state);
+    };
 
     add(taskName: string): void {
         let state: IToDoListState = this.getState();
@@ -35,6 +40,7 @@ class ToDoList extends React.Component<IToDoListProps, IToDoListState> {
 
         state.tasks.set(state.futureTaskId, newTask);
         state.futureTaskId++;
+        state.newTaskName = "";
 
         this.setState(state);
     }
@@ -46,10 +52,10 @@ class ToDoList extends React.Component<IToDoListProps, IToDoListState> {
         this.setState(state);
     };
 
-    done(taskId: number): void {
+    done = (taskId: number) => () => {
         let state: IToDoListState = this.getState();
         let task: ITask = state.tasks.get(taskId);
-        task.isDone = true;
+        task.isDone = !task.isDone;
         state.tasks.set(task.taskId, task);
 
         this.setState(state);
@@ -60,7 +66,8 @@ class ToDoList extends React.Component<IToDoListProps, IToDoListState> {
             <ToDoItem
                 value={item}
                 onDelete={() => this.delete(item.taskId)}
-                onDone={() => this.done(item.taskId)}
+                onDone={this.done(item.taskId)}
+                onEdit={this.edit(item.taskId, item.name)}
                 key={item.taskId}
             />
         );
@@ -80,7 +87,16 @@ class ToDoList extends React.Component<IToDoListProps, IToDoListState> {
     render() {
         return (
             <div className="App">
-                <h1>ToDoList</h1>
+                <h1 style={{textAlign: "center"}}>ToDoList</h1>
+                <form style={{textAlign:"center"}} id="todoList-form" onSubmit={this.onSubmitAdd}>
+                    <input type="text"
+                           placeholder="Введите название"
+                           autoComplete={"off"}
+                           value={this.state.newTaskName}
+                           onChange={this.handleInputNewTaskName}
+                           required />
+                    <button>Добавить</button>
+                </form>
                 <ul>
                     {
                         Array.from(this.state.tasks.values()).map((item: ITask) => {
@@ -88,13 +104,6 @@ class ToDoList extends React.Component<IToDoListProps, IToDoListState> {
                         })
                     }
                 </ul>
-                <form ref="form" onSubmit={this.onSubmitAdd} className="form-inline">
-                    <input type="text" ref="itemName" className="form-control"
-                        value={this.state.newTaskName} 
-                        onChange={this.handleInputNewTaskName}
-                    />
-                    <button type="submit" className="btn btn-default">Add</button> 
-                </form>
             </div>
         );
     }
